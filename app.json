@@ -1,5 +1,6 @@
 {
   "expo": {
+    "entryPoint": "./src/App.tsx",
     "name": "chartOfAccounts",
     "slug": "chartOfAccounts",
     "version": "1.0.0",

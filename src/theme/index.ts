@@ -1,10 +1,10 @@
 import { extendTheme } from "native-base";
 
-const newColorTheme = {
+const colors = {
   violet: {
     50: "#F0EDF5",
     900: "#622490",
   },
 };
 
-export const theme = extendTheme({ colors: newColorTheme });
+export const theme = extendTheme({ colors });
