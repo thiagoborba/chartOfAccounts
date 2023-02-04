@@ -1,13 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { NativeBaseProvider } from "native-base";
+import { Heading, Icon, IconButton, NativeBaseProvider } from "native-base";
 import React from "react";
-import { colors, theme } from "./theme";
+import { theme } from "./theme";
 
 import { registerRootComponent } from "expo";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home } from "./screens/Home";
-import { Registration } from "./screens/Registration";
+import { Home } from "./Screens/Home";
+import { Registration } from "./Screens/Registration";
+import { HomeHeader, RegistrationHeader } from "./Components/Header";
 
 export type StackParamList = {
   Registration: undefined;
@@ -21,17 +22,23 @@ function App() {
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="Home"
           screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.colors.violet[900],
+            contentStyle: {
+              backgroundColor: theme.colors.UCondo.dark,
             },
-            headerTintColor: theme.colors.white,
-            headerTitle: "",
           }}
+          initialRouteName="Home"
         >
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Registration" component={Registration} />
+          <Stack.Screen
+            options={{ header: HomeHeader }}
+            name="Home"
+            component={Home}
+          />
+          <Stack.Screen
+            options={{ header: RegistrationHeader }}
+            name="Registration"
+            component={Registration}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
