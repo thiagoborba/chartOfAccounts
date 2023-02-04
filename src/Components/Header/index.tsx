@@ -13,6 +13,8 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { AntDesign, Ionicons, EvilIcons } from "@expo/vector-icons";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 
+import { useTheme } from "native-base";
+
 function HeaderContainer({ children, ...props }: InterfaceVStackProps) {
   return (
     <VStack backgroundColor={"UCondo.dark"} padding={4} {...props}>
@@ -24,6 +26,7 @@ function HeaderContainer({ children, ...props }: InterfaceVStackProps) {
 }
 
 export const HomeHeader = (props: NativeStackHeaderProps) => {
+  const theme = useTheme();
   return (
     <HeaderContainer paddingRight={2}>
       <VStack>

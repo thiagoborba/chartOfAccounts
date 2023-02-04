@@ -1,5 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { Heading, Icon, IconButton, NativeBaseProvider } from "native-base";
+import {
+  Box,
+  Container,
+  Heading,
+  Icon,
+  IconButton,
+  NativeBaseProvider,
+  View,
+} from "native-base";
 import React from "react";
 import { theme } from "./theme";
 
@@ -10,6 +18,8 @@ import { Home } from "./Screens/Home";
 import { Registration } from "./Screens/Registration";
 import { HomeHeader, RegistrationHeader } from "./Components/Header";
 
+import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
+
 export type StackParamList = {
   Registration: undefined;
   Home: undefined;
@@ -18,6 +28,14 @@ export type StackParamList = {
 const Stack = createNativeStackNavigator<StackParamList>();
 
 function App() {
+  let [fontsLoaded] = useFonts({
+    Rubik_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
