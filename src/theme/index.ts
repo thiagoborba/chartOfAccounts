@@ -1,9 +1,9 @@
 import { extendTheme } from "native-base";
 
 const colors = {
-  violet: {
-    50: "#F0EDF5",
-    900: "#622490",
+  UCondo: {
+    light: "#F0EDF5",
+    dark: "#622490",
   },
 };
 
