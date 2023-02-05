@@ -52,11 +52,7 @@ function App() {
             name="Home"
             component={Home}
           />
-          <Stack.Screen
-            options={{ header: RegistrationHeader }}
-            name="Registration"
-            component={Registration}
-          />
+          <Stack.Screen name="Registration" component={Registration} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

@@ -15,10 +15,12 @@ export const Input: React.FC<Props> = ({
   label,
   placeholder,
   errorMessage,
+  isInvalid,
+  isRequired,
   ...props
 }) => {
   return (
-    <FormControl>
+    <FormControl marginBottom={3} isInvalid={isInvalid} isRequired={isRequired}>
       <FormControl.Label>{label}</FormControl.Label>
       <NativeInput
         backgroundColor="white"

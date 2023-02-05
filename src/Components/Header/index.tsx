@@ -13,6 +13,10 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { AntDesign, Ionicons, EvilIcons } from "@expo/vector-icons";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 
+type RegistrationHeaderProps = NativeStackHeaderProps & {
+  submitAction: () => any;
+};
+
 function HeaderContainer({ children, ...props }: InterfaceVStackProps) {
   return (
     <VStack backgroundColor={"UCondo.dark"} padding={4} {...props}>
@@ -53,7 +57,10 @@ export const HomeHeader = (props: NativeStackHeaderProps) => {
   );
 };
 
-export const RegistrationHeader = ({ navigation }: NativeStackHeaderProps) => {
+export const RegistrationHeader = ({
+  navigation,
+  submitAction,
+}: RegistrationHeaderProps) => {
   return (
     <HeaderContainer px={0} paddingRight={2}>
       <HStack justifyContent="space-between" alignItems="center">
@@ -73,7 +80,7 @@ export const RegistrationHeader = ({ navigation }: NativeStackHeaderProps) => {
         <IconButton
           rounded="full"
           size="lg"
-          onPress={() => navigation.goBack()}
+          onPress={submitAction}
           icon={<Icon as={AntDesign} color="white" name="check" />}
         />
       </HStack>

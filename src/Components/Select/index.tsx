@@ -7,22 +7,26 @@ import {
   WarningOutlineIcon,
 } from "native-base";
 import { ISelectProps } from "native-base/lib/typescript/components/primitives/Select";
+import { IFormControlProps } from "native-base/lib/typescript/components/composites/FormControl/types";
 
-type Props = ISelectProps & {
-  label: string;
-  data: { label: string; value: string }[];
-  errorMessage?: string;
-};
+type Props = ISelectProps &
+  Partial<IFormControlProps> & {
+    label: string;
+    data: { label: string; value: any }[];
+    errorMessage?: string;
+  };
 
 export const Select: React.FC<Props> = ({
   label,
   placeholder,
   data,
   errorMessage,
+  isInvalid,
+  isRequired,
   ...props
 }) => {
   return (
-    <FormControl>
+    <FormControl marginBottom={3} isInvalid={isInvalid} isRequired={isRequired}>
       <FormControl.Label>{label}</FormControl.Label>
       <NativeSelect
         backgroundColor="white"
