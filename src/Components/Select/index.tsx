@@ -8,13 +8,14 @@ import {
 } from "native-base";
 import { ISelectProps } from "native-base/lib/typescript/components/primitives/Select";
 import { IFormControlProps } from "native-base/lib/typescript/components/composites/FormControl/types";
+import { Omit } from "react-native";
 
-type Props = ISelectProps &
-  Partial<IFormControlProps> & {
-    label: string;
-    data: { label: string; value: any }[];
-    errorMessage?: string;
-  };
+type Props = Omit<ISelectProps, "selectedValue"> & {
+  label: string;
+  data: { label: string; value: any }[];
+  errorMessage?: string;
+  selectedValue: any;
+} & Partial<IFormControlProps> & {};
 
 export const Select: React.FC<Props> = ({
   label,
@@ -23,6 +24,7 @@ export const Select: React.FC<Props> = ({
   errorMessage,
   isInvalid,
   isRequired,
+  selectedValue,
   ...props
 }) => {
   return (
@@ -35,6 +37,7 @@ export const Select: React.FC<Props> = ({
         borderRadius="xl"
         accessibilityLabel={placeholder}
         placeholder={placeholder}
+        selectedValue={selectedValue}
         {...props}
       >
         {data?.map((item) => (

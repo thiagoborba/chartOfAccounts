@@ -1,9 +1,10 @@
 export type Account = {
-  parentAccount: string;
+  parentAccountId?: string;
+  canBeParentAccount: boolean;
   id: string;
   name: string;
-  type: AccountTypes;
-  acceptEntry: boolean;
+  type: string;
+  acceptEntry: boolean | undefined;
 };
 
 export enum AccountTypes {

@@ -19,6 +19,7 @@ import { Registration } from "./Screens/Registration";
 import { HomeHeader, RegistrationHeader } from "./Components/Header";
 
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
+import { GlobalContextProvider } from "./Context";
 
 export type StackParamList = {
   Registration: undefined;
@@ -38,23 +39,25 @@ function App() {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            contentStyle: {
-              backgroundColor: theme.colors.UCondo.dark,
-            },
-          }}
-          initialRouteName="Registration"
-        >
-          <Stack.Screen
-            options={{ header: HomeHeader }}
-            name="Home"
-            component={Home}
-          />
-          <Stack.Screen name="Registration" component={Registration} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <GlobalContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: theme.colors.UCondo.dark,
+              },
+            }}
+            initialRouteName="Home"
+          >
+            <Stack.Screen
+              options={{ header: HomeHeader }}
+              name="Home"
+              component={Home}
+            />
+            <Stack.Screen name="Registration" component={Registration} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GlobalContextProvider>
     </NativeBaseProvider>
   );
 }
