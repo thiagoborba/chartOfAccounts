@@ -15,6 +15,7 @@ import { InterfaceVStackProps } from "native-base/lib/typescript/components/prim
 
 type RegistrationHeaderProps = NativeStackHeaderProps & {
   submitAction: () => any;
+  visualization?: boolean;
 };
 
 function HeaderContainer({ children, ...props }: InterfaceVStackProps) {
@@ -60,6 +61,7 @@ export const HomeHeader = (props: NativeStackHeaderProps) => {
 export const RegistrationHeader = ({
   navigation,
   submitAction,
+  visualization,
 }: RegistrationHeaderProps) => {
   return (
     <HeaderContainer px={0} paddingRight={2}>
@@ -77,12 +79,14 @@ export const RegistrationHeader = ({
           color="white"
           children="Inserir Conta"
         />
-        <IconButton
-          rounded="full"
-          size="lg"
-          onPress={submitAction}
-          icon={<Icon as={AntDesign} color="white" name="check" />}
-        />
+        {!visualization && (
+          <IconButton
+            rounded="full"
+            size="lg"
+            onPress={submitAction}
+            icon={<Icon as={AntDesign} color="white" name="check" />}
+          />
+        )}
       </HStack>
     </HeaderContainer>
   );

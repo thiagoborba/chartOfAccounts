@@ -9,17 +9,17 @@ import * as Yup from "yup";
 import { RegistrationHeader } from "../../Components/Header";
 import { ACCOUNT_TYPE, errorMessage } from "../../constants";
 import { ActionTypes, GlobalContext } from "../../Context";
-import { AccountTypes } from "../../Types";
+import { AccountTypes, Account } from "../../Types";
 
-type Props = NativeStackScreenProps<StackParamList>;
+type Props = NativeStackScreenProps<StackParamList, "Registration">;
 
-type Values = {
-  parentAccountId: string;
-  id: string;
-  name: string;
-  type: string;
-  acceptEntry: boolean | undefined;
-};
+// type Values = {
+//   parentAccountId: string;
+//   id: string;
+//   name: string;
+//   type: string;
+//   acceptEntry: boolean | undefined;
+// };
 
 const validationSchema = Yup.object().shape({
   id: Yup.string().required(errorMessage),
@@ -38,15 +38,22 @@ const entriesData = [
   { label: "Não", value: false },
 ];
 
-export function Registration({ navigation }: Props) {
-  const { setFieldValue, errors, values, submitForm } = useFormik<Values>({
-    initialValues: {
-      parentAccountId: "",
-      id: "",
-      name: "",
-      type: "",
-      acceptEntry: undefined,
-    },
+const INITIAL_VALUES = {
+  parentAccountId: "",
+  id: "",
+  name: "",
+  type: "",
+  acceptEntry: undefined,
+  canBeParentAccount: false,
+};
+
+export function Registration({ navigation, route }: Props) {
+  const disableInputs = !!route?.params?.acc?.id;
+
+  const initialValues = disableInputs ? route.params.acc : INITIAL_VALUES;
+
+  const { setFieldValue, errors, values, submitForm } = useFormik<Account>({
+    initialValues,
     onSubmit,
     validationSchema,
     validateOnChange: false,
@@ -70,7 +77,11 @@ export function Registration({ navigation }: Props) {
   React.useEffect(() => {
     navigation.setOptions({
       header: (props) => (
-        <RegistrationHeader {...props} submitAction={submitForm} />
+        <RegistrationHeader
+          {...props}
+          visualization={disableInputs}
+          submitAction={submitForm}
+        />
       ),
     });
   }, []);
@@ -81,7 +92,7 @@ export function Registration({ navigation }: Props) {
     }
   }, [values.parentAccountId]);
 
-  function onSubmit(values: Values) {
+  function onSubmit(values: Account) {
     const account = { ...values, canBeParentAccount: !values.acceptEntry };
 
     dispatch({ type: ActionTypes.ADD_ACCOUNT, payload: account });
@@ -91,6 +102,7 @@ export function Registration({ navigation }: Props) {
   return (
     <Screen>
       <Select
+        isDisabled={disableInputs}
         onValueChange={(value) => setFieldValue("parentAccountId", value)}
         data={parentAccounts?.map((account) => ({
           label: `${account.id} - ${account.name}`,
@@ -101,6 +113,7 @@ export function Registration({ navigation }: Props) {
         label="Conta pai"
       />
       <Input
+        isDisabled={disableInputs}
         value={values.id}
         isInvalid={!!errors.id}
         errorMessage={errors.id}
@@ -109,6 +122,7 @@ export function Registration({ navigation }: Props) {
         placeholder="Digite o código da conta"
       />
       <Input
+        isDisabled={disableInputs}
         value={values.name}
         isInvalid={!!errors.name}
         errorMessage={errors.name}
@@ -117,7 +131,7 @@ export function Registration({ navigation }: Props) {
         placeholder="Digite o nome da conta"
       />
       <Select
-        isDisabled={hasParentID}
+        isDisabled={hasParentID || disableInputs}
         selectedValue={typeValue}
         isInvalid={!!errors.type}
         errorMessage={errors.type}
@@ -127,6 +141,7 @@ export function Registration({ navigation }: Props) {
         label="Tipo"
       />
       <Select
+        isDisabled={disableInputs}
         selectedValue={values.acceptEntry}
         isInvalid={!!errors.acceptEntry}
         errorMessage={errors.acceptEntry}
