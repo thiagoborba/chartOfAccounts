@@ -18,8 +18,8 @@ export function Home({ navigation }: Props) {
   }));
 
   return (
-    <Screen>
-      <List data={listData} />
+    <Screen px={0}>
+      <List px={5} data={listData} />
     </Screen>
   );
 }
