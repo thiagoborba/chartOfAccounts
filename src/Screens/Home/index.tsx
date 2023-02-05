@@ -4,21 +4,33 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { StackParamList } from "../../App";
 import { Screen } from "../../Components/Screen";
 import { List } from "../../Components/List";
-import { Account, AccountTypes } from "../../Types";
+import {
+  Account,
+  AccountTypes,
+  HomeScreenProps,
+  ScreenMode,
+  Screens,
+} from "../../Types";
 import { ActionTypes, GlobalContext } from "../../Context";
 import { UModal } from "../../Components/Modal";
 
-type Props = NativeStackScreenProps<StackParamList, "Home">;
-
 const modalInitialState = { isOpen: false, account: {} as Account };
 
-export function Home({ navigation, route }: Props) {
+export function Home({ navigation, route }: HomeScreenProps) {
+  const [accounts, setAccounts] = useState([] as Account[]);
+
   const {
     state: { accounts: contextAccounts },
     dispatch,
   } = GlobalContext();
 
-  const [accounts, setAccounts] = useState(contextAccounts);
+  useEffect(() => {
+    setAccounts(contextAccounts);
+  }, [contextAccounts]);
+
+  useEffect(() => {
+    filterAccounts();
+  }, [route.params?.search]);
 
   function filterAccounts() {
     if (route.params?.search) {
@@ -34,10 +46,6 @@ export function Home({ navigation, route }: Props) {
     }
   }
 
-  useEffect(() => {
-    filterAccounts();
-  }, [route.params?.search]);
-
   const [modal, setModal] = useState(modalInitialState);
 
   const listData = accounts?.map((acc) => ({
@@ -45,8 +53,9 @@ export function Home({ navigation, route }: Props) {
     label: acc.name,
     onClickDelete: () => setModal({ isOpen: true, account: acc }),
     onClickItem: () => {
-      navigation.navigate("Registration", {
+      navigation.navigate(Screens.REGISTRATION, {
         acc,
+        mode: ScreenMode.PREVIEW,
       });
     },
     type: acc.type as AccountTypes.EXPENSE | AccountTypes.INCOME,

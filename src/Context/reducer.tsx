@@ -15,7 +15,6 @@ export const initialState = {
       name: "Conta 1",
       type: "INCOME",
       acceptEntry: false,
-      canBeParentAccount: true,
       parentAccountId: "",
     },
   ],

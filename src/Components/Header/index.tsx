@@ -12,10 +12,12 @@ import {
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { AntDesign, Ionicons, EvilIcons } from "@expo/vector-icons";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
+import { ScreenMode } from "../../Types";
 
-type RegistrationHeaderProps = NativeStackHeaderProps & {
-  submitAction: () => any;
-  visualization?: boolean;
+type RegistrationHeaderProps = {
+  onClickSubmit: () => any;
+  onClickBack: () => any;
+  previewMode: boolean;
 };
 
 function HeaderContainer({ children, ...props }: InterfaceVStackProps) {
@@ -37,7 +39,11 @@ export const HomeHeader = (props: NativeStackHeaderProps) => {
           <IconButton
             rounded="full"
             size="lg"
-            onPress={() => props.navigation.navigate("Registration")}
+            onPress={() =>
+              props.navigation.navigate("Registration", {
+                mode: ScreenMode.CREATE,
+              })
+            }
             icon={<Icon as={AntDesign} color="white" name="plus" />}
           />
         </HStack>
@@ -60,9 +66,9 @@ export const HomeHeader = (props: NativeStackHeaderProps) => {
 };
 
 export const RegistrationHeader = ({
-  navigation,
-  submitAction,
-  visualization,
+  onClickSubmit,
+  onClickBack,
+  previewMode,
 }: RegistrationHeaderProps) => {
   return (
     <HeaderContainer px={0} paddingRight={2}>
@@ -70,7 +76,7 @@ export const RegistrationHeader = ({
         <IconButton
           rounded="full"
           size="lg"
-          onPress={() => navigation.goBack()}
+          onPress={onClickBack}
           icon={<Icon as={Ionicons} color="white" name="chevron-back" />}
         />
         <Heading
@@ -80,11 +86,11 @@ export const RegistrationHeader = ({
           color="white"
           children="Inserir Conta"
         />
-        {!visualization && (
+        {!previewMode && (
           <IconButton
             rounded="full"
             size="lg"
-            onPress={submitAction}
+            onPress={onClickSubmit}
             icon={<Icon as={AntDesign} color="white" name="check" />}
           />
         )}

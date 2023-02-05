@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
-import { StackParamList } from "../../App";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Screen } from "../../Components/Screen";
 import { Select } from "../../Components/Select";
 import { Input } from "../../Components/Input";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RegistrationHeader } from "../../Components/Header";
-import { ACCOUNT_TYPE, errorMessage } from "../../constants";
 import { ActionTypes, GlobalContext } from "../../Context";
-import { AccountTypes, Account } from "../../Types";
+import {
+  AccountTypes,
+  Account,
+  ScreenMode,
+  RegistrationScreenProps,
+} from "../../Types";
 
-type Props = NativeStackScreenProps<StackParamList, "Registration">;
+export const errorMessage = "Preencha esse campo para continuar";
 
 const validationSchema = Yup.object().shape({
   id: Yup.string().required(errorMessage),
@@ -21,8 +23,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountTypeData = [
-  { label: ACCOUNT_TYPE.INCOME, value: AccountTypes.INCOME },
-  { label: ACCOUNT_TYPE.EXPENSE, value: AccountTypes.EXPENSE },
+  { label: "Receita", value: AccountTypes.INCOME },
+  { label: "Despesa", value: AccountTypes.EXPENSE },
 ];
 
 const entriesData = [
@@ -30,82 +32,92 @@ const entriesData = [
   { label: "Não", value: false },
 ];
 
-const INITIAL_VALUES = {
-  parentAccountId: "",
-  id: "",
-  name: "",
-  type: "",
-  acceptEntry: undefined,
-  canBeParentAccount: false,
-};
+type Values = Account;
 
-export function Registration({ navigation, route }: Props) {
-  const disableInputs = !!route?.params?.acc?.id;
+const initialValues = {} as Values;
 
-  const initialValues = disableInputs ? route.params.acc : INITIAL_VALUES;
-
-  const { setFieldValue, errors, values, submitForm } = useFormik<Account>({
-    initialValues,
-    onSubmit,
-    validationSchema,
-    validateOnChange: false,
-    validateOnBlur: true,
-  });
-
+export function Registration({ navigation, route }: RegistrationScreenProps) {
   const {
     state: { accounts },
     dispatch,
   } = GlobalContext();
+
+  const { setFieldValue, errors, values, submitForm, setValues } =
+    useFormik<Values>({
+      initialValues,
+      onSubmit,
+      validationSchema,
+      validateOnChange: false,
+      validateOnBlur: true,
+    });
+
+  const isPreviewMode = route?.params?.mode === ScreenMode.PREVIEW;
+  const hasSelectedAccount = route?.params?.acc?.id;
+  const selectedAccount = route.params.acc!;
+
   const parentAccounts = accounts?.filter(
-    (account) => account.canBeParentAccount
+    (account) => account.acceptEntry === false
   );
 
-  const hasParentID = !!values.parentAccountId;
-  const parentType = parentAccounts?.find(
-    (account) => account.id === values.parentAccountId
-  )?.type;
-  const typeValue = hasParentID ? parentType : values.type;
+  const parentAccount = parentAccounts.find(
+    (acc) => acc.id === values?.parentAccountId
+  );
 
-  React.useEffect(() => {
+  const parentAccountInputData = parentAccounts.map((account) => ({
+    label: `${account.id} - ${account.name}`,
+    value: account.id,
+  }));
+
+  function setPreviewModeInitialValues() {
+    if (isPreviewMode && hasSelectedAccount) {
+      setValues(selectedAccount);
+    }
+  }
+
+  function setHeader() {
     navigation.setOptions({
       header: (props) => (
         <RegistrationHeader
-          {...props}
-          visualization={disableInputs}
-          submitAction={submitForm}
+          onClickBack={() => navigation.goBack()}
+          onClickSubmit={submitForm}
+          previewMode={isPreviewMode}
         />
       ),
     });
+  }
+
+  function setAccounTypeByParentAccountId() {
+    if (!isPreviewMode && parentAccount) {
+      setFieldValue("type", parentAccount.type);
+    }
+  }
+
+  useEffect(() => {
+    setPreviewModeInitialValues();
+    setHeader();
   }, []);
 
   useEffect(() => {
-    if (hasParentID) {
-      setFieldValue("type", parentType);
-    }
+    setAccounTypeByParentAccountId();
   }, [values.parentAccountId]);
 
-  function onSubmit(values: Account) {
-    const account = { ...values, canBeParentAccount: !values.acceptEntry };
-
-    dispatch({ type: ActionTypes.ADD_ACCOUNT, payload: account });
+  function onSubmit(values: Values) {
+    dispatch({ type: ActionTypes.ADD_ACCOUNT, payload: values });
     navigation.goBack();
   }
 
   return (
     <Screen>
       <Select
-        isDisabled={disableInputs}
+        isDisabled={isPreviewMode}
         onValueChange={(value) => setFieldValue("parentAccountId", value)}
-        data={parentAccounts?.map((account) => ({
-          label: `${account.id} - ${account.name}`,
-          value: account.id,
-        }))}
+        data={parentAccountInputData}
         selectedValue={values.parentAccountId}
         placeholder="Selecione uma conta"
         label="Conta pai"
       />
       <Input
-        isDisabled={disableInputs}
+        isDisabled={isPreviewMode}
         value={values.id}
         isInvalid={!!errors.id}
         errorMessage={errors.id}
@@ -114,7 +126,7 @@ export function Registration({ navigation, route }: Props) {
         placeholder="Digite o código da conta"
       />
       <Input
-        isDisabled={disableInputs}
+        isDisabled={isPreviewMode}
         value={values.name}
         isInvalid={!!errors.name}
         errorMessage={errors.name}
@@ -123,8 +135,8 @@ export function Registration({ navigation, route }: Props) {
         placeholder="Digite o nome da conta"
       />
       <Select
-        isDisabled={hasParentID || disableInputs}
-        selectedValue={typeValue}
+        isDisabled={isPreviewMode || !!parentAccount}
+        selectedValue={values.type}
         isInvalid={!!errors.type}
         errorMessage={errors.type}
         onValueChange={(value) => setFieldValue("type", value)}
@@ -133,7 +145,7 @@ export function Registration({ navigation, route }: Props) {
         label="Tipo"
       />
       <Select
-        isDisabled={disableInputs}
+        isDisabled={isPreviewMode}
         selectedValue={values.acceptEntry}
         isInvalid={!!errors.acceptEntry}
         errorMessage={errors.acceptEntry}

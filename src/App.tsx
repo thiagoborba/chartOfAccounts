@@ -1,13 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  Box,
-  Container,
-  Heading,
-  Icon,
-  IconButton,
-  NativeBaseProvider,
-  View,
-} from "native-base";
+import { NativeBaseProvider } from "native-base";
 import React from "react";
 import { theme } from "./theme";
 
@@ -16,15 +8,16 @@ import { registerRootComponent } from "expo";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home } from "./Screens/Home";
 import { Registration } from "./Screens/Registration";
-import { HomeHeader, RegistrationHeader } from "./Components/Header";
+import { HomeHeader } from "./Components/Header";
 
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 import { GlobalContextProvider } from "./Context";
-import { Account } from "./Types";
+import { Account, ScreenMode, Screens } from "./Types";
 
 export type StackParamList = {
   Registration: {
-    acc: Account;
+    mode: ScreenMode.PREVIEW | ScreenMode.CREATE;
+    acc?: Account;
   };
   Home: {
     search: string;
@@ -52,14 +45,17 @@ function App() {
                 backgroundColor: theme.colors.UCondo.dark,
               },
             }}
-            initialRouteName="Home"
+            initialRouteName={Screens.HOME}
           >
             <Stack.Screen
               options={{ header: HomeHeader }}
-              name="Home"
+              name={Screens.HOME}
               component={Home}
             />
-            <Stack.Screen name="Registration" component={Registration} />
+            <Stack.Screen
+              name={Screens.REGISTRATION}
+              component={Registration}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </GlobalContextProvider>
