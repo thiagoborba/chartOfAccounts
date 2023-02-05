@@ -7,6 +7,7 @@ const colors = {
     grey: "#C4C4D1",
     grey2: "#A0A0B2",
     grey3: "#6A6A6A",
+    grey4: "#747474",
     sucess: "#1BA803",
     danger: "#E28856",
     pink: "#FF6680",

@@ -45,7 +45,7 @@ function App() {
               backgroundColor: theme.colors.UCondo.dark,
             },
           }}
-          initialRouteName="Home"
+          initialRouteName="Registration"
         >
           <Stack.Screen
             options={{ header: HomeHeader }}
