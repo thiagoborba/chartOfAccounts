@@ -13,14 +13,6 @@ import { AccountTypes, Account } from "../../Types";
 
 type Props = NativeStackScreenProps<StackParamList, "Registration">;
 
-// type Values = {
-//   parentAccountId: string;
-//   id: string;
-//   name: string;
-//   type: string;
-//   acceptEntry: boolean | undefined;
-// };
-
 const validationSchema = Yup.object().shape({
   id: Yup.string().required(errorMessage),
   name: Yup.string().required(errorMessage),

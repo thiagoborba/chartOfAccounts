@@ -45,6 +45,7 @@ export const HomeHeader = (props: NativeStackHeaderProps) => {
           InputLeftElement={
             <Icon as={EvilIcons} name="search" size={6} ml={2} />
           }
+          onChangeText={(search) => props.navigation.setParams({ search })}
           variant="rounded"
           size="2xl"
           placeholder="Pesquisar Conta"

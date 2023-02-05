@@ -26,7 +26,9 @@ export type StackParamList = {
   Registration: {
     acc: Account;
   };
-  Home: undefined;
+  Home: {
+    search: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
