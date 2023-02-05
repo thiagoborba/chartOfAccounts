@@ -9,7 +9,16 @@ import {
 import { addAccount, deleteAccount } from "./actionFunctions";
 
 export const initialState = {
-  accounts: [],
+  accounts: [
+    {
+      id: "1",
+      name: "Conta 1",
+      type: "INCOME",
+      acceptEntry: false,
+      canBeParentAccount: true,
+      parentAccountId: "",
+    },
+  ],
 } as GlobalState;
 
 const Context = createContext({} as GlobalContextProps);

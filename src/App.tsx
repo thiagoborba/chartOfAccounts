@@ -20,9 +20,12 @@ import { HomeHeader, RegistrationHeader } from "./Components/Header";
 
 import { useFonts, Rubik_400Regular } from "@expo-google-fonts/rubik";
 import { GlobalContextProvider } from "./Context";
+import { Account } from "./Types";
 
 export type StackParamList = {
-  Registration: undefined;
+  Registration: {
+    acc: Account;
+  };
   Home: undefined;
 };
 
