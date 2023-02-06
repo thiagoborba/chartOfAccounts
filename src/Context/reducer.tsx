@@ -8,17 +8,10 @@ import {
 
 import { addAccount, deleteAccount } from "./actionFunctions";
 
+import accounts from "../Mock/entries.json";
+
 export const initialState = {
-  accounts: [
-    {
-      id: "1",
-      name: "Conta 1",
-      type: "INCOME",
-      acceptEntry: false,
-      parentAccountId: "",
-      active: true,
-    },
-  ],
+  accounts,
 } as GlobalState;
 
 const Context = createContext({} as GlobalContextProps);
