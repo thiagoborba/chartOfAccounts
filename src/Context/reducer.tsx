@@ -16,6 +16,7 @@ export const initialState = {
       type: "INCOME",
       acceptEntry: false,
       parentAccountId: "",
+      active: true,
     },
   ],
 } as GlobalState;
@@ -51,5 +52,40 @@ export const GlobalContextProvider: React.FunctionComponent<InitialState> = ({
 
 export function GlobalContext() {
   const { state, dispatch } = useContext(Context);
-  return { state, dispatch, ActionTypes };
+
+  function getActiveAccounts() {
+    return state.accounts.filter((acc) => acc.active === true);
+  }
+
+  function getAllAccounts() {
+    return state.accounts;
+  }
+
+  function isValidAccountId(id: string) {
+    return !state.accounts.some((acc) => acc.id === id);
+  }
+
+  function getAllParentsAccounts() {
+    return state.accounts.filter((acc) => !acc.acceptEntry);
+  }
+
+  function getActiveParentsAccounts() {
+    return getActiveAccounts().filter((acc) => !acc.acceptEntry);
+  }
+
+  function getAccount(id: string) {
+    return state.accounts.find((acc) => acc.id === id);
+  }
+
+  return {
+    dispatch,
+    ActionTypes,
+    getActiveAccounts,
+    isValidAccountId,
+    getAllParentsAccounts,
+    getActiveParentsAccounts,
+    getAllAccounts,
+    getAccount,
+    state,
+  };
 }

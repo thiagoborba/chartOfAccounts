@@ -7,6 +7,7 @@ export type Account = {
   name: string;
   type: string;
   acceptEntry: boolean | undefined;
+  active: boolean;
 };
 
 export enum AccountTypes {

@@ -19,14 +19,13 @@ const modalInitialState = { isOpen: false, account: {} as Account };
 export function Home({ navigation, route }: HomeScreenProps) {
   const [accounts, setAccounts] = useState([] as Account[]);
 
-  const {
-    state: { accounts: contextAccounts },
-    dispatch,
-  } = GlobalContext();
+  const { getActiveAccounts, dispatch } = GlobalContext();
+
+  const activeAccounts = getActiveAccounts();
 
   useEffect(() => {
-    setAccounts(contextAccounts);
-  }, [contextAccounts]);
+    setAccounts(activeAccounts);
+  }, [activeAccounts.length]);
 
   useEffect(() => {
     filterAccounts();
@@ -35,14 +34,14 @@ export function Home({ navigation, route }: HomeScreenProps) {
   function filterAccounts() {
     if (route.params?.search) {
       setAccounts(
-        contextAccounts?.filter((acc) => {
+        activeAccounts?.filter((acc) => {
           const name = `${acc.id} - ${acc.name}`.toLowerCase();
           const search = route.params.search.toLowerCase();
           return name.includes(search);
         })
       );
     } else {
-      setAccounts(contextAccounts);
+      setAccounts(activeAccounts);
     }
   }
 

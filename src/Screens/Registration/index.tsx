@@ -38,8 +38,10 @@ const initialValues = {} as Values;
 
 export function Registration({ navigation, route }: RegistrationScreenProps) {
   const {
-    state: { accounts },
     dispatch,
+    getActiveParentsAccounts,
+    getAllParentsAccounts,
+    getAccount,
   } = GlobalContext();
 
   const { setFieldValue, errors, values, submitForm, setValues } =
@@ -55,13 +57,12 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
   const hasSelectedAccount = route?.params?.acc?.id;
   const selectedAccount = route.params.acc!;
 
-  const parentAccounts = accounts?.filter(
-    (account) => account.acceptEntry === false
-  );
+  const allParentAccounts = getAllParentsAccounts();
+  const activeParentAccounts = getActiveParentsAccounts();
 
-  const parentAccount = parentAccounts.find(
-    (acc) => acc.id === values?.parentAccountId
-  );
+  const parentAccounts = isPreviewMode
+    ? allParentAccounts
+    : activeParentAccounts;
 
   const parentAccountInputData = parentAccounts.map((account) => ({
     label: `${account.id} - ${account.name}`,
@@ -86,16 +87,17 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
     });
   }
 
-  function setAccounTypeByParentAccountId() {
-    if (!isPreviewMode && parentAccount) {
-      setFieldValue("type", parentAccount.type);
-    }
-  }
-
   useEffect(() => {
     setPreviewModeInitialValues();
     setHeader();
   }, []);
+
+  function setAccounTypeByParentAccountId() {
+    const parentAccount = getAccount(values.parentAccountId!)!;
+    if (!isPreviewMode && parentAccount) {
+      setFieldValue("type", parentAccount.type);
+    }
+  }
 
   useEffect(() => {
     setAccounTypeByParentAccountId();
@@ -135,7 +137,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
         placeholder="Digite o nome da conta"
       />
       <Select
-        isDisabled={isPreviewMode || !!parentAccount}
+        isDisabled={isPreviewMode || !!values.parentAccountId}
         selectedValue={values.type}
         isInvalid={!!errors.type}
         errorMessage={errors.type}
