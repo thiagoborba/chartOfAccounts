@@ -59,14 +59,12 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
     getIds,
   } = GlobalContext();
 
-  const { setFieldValue, errors, values, submitForm, setValues } =
+  const { setFieldValue, errors, values, submitForm, setValues, submitCount } =
     useFormik<Values>({
       initialValues,
       onSubmit,
       validationSchema,
       validate: (values) => Validate(values, isValidAccountId),
-      validateOnChange: false,
-      validateOnBlur: true,
     });
 
   const hasSelectedAccount = route?.params?.acc?.id;
@@ -143,7 +141,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
         isDisabled={isPreviewMode}
         value={values.id}
         isInvalid={!!errors.id}
-        errorMessage={errors.id}
+        errorMessage={submitCount && errors.id}
         onChangeText={(value) => setFieldValue("id", value)}
         label="Código"
         placeholder="Digite o código da conta"
@@ -152,7 +150,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
         isDisabled={isPreviewMode}
         value={values.name}
         isInvalid={!!errors.name}
-        errorMessage={errors.name}
+        errorMessage={submitCount && errors.name}
         onChangeText={(value) => setFieldValue("name", value)}
         label="Nome"
         placeholder="Digite o nome da conta"
@@ -161,7 +159,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
         isDisabled={isPreviewMode || !!values.parentAccountId}
         selectedValue={values.type}
         isInvalid={!!errors.type}
-        errorMessage={errors.type}
+        errorMessage={submitCount && errors.type}
         onValueChange={(value) => setFieldValue("type", value)}
         data={AccountTypeData}
         placeholder="Selecione um tipo para a conta"
@@ -171,7 +169,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
         isDisabled={isPreviewMode}
         selectedValue={values.acceptEntry}
         isInvalid={!!errors.acceptEntry}
-        errorMessage={errors.acceptEntry}
+        errorMessage={submitCount && errors.acceptEntry}
         onValueChange={(value) => setFieldValue("acceptEntry", value)}
         data={entriesData}
         placeholder="Aceita lançamentos"

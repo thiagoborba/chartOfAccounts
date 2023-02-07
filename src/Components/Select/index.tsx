@@ -13,7 +13,7 @@ import { Omit } from "react-native";
 type Props = Omit<ISelectProps, "selectedValue"> & {
   label: string;
   data: { label: string; value: any }[];
-  errorMessage?: string;
+  errorMessage?: string | number | undefined;
   selectedValue: any;
 } & Partial<IFormControlProps> & {};
 

@@ -8,7 +8,7 @@ import { IInputProps } from "native-base/lib/typescript/components/primitives/In
 
 type Props = IInputProps & {
   label: string;
-  errorMessage?: string;
+  errorMessage?: string | number | undefined;
 };
 
 export const Input: React.FC<Props> = ({
