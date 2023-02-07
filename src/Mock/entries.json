@@ -316,7 +316,7 @@
     "name": "Água e esgoto",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -324,7 +324,7 @@
     "name": "Taxa de administração",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -332,7 +332,7 @@
     "name": "Gás",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -340,7 +340,7 @@
     "name": "Seguro obrigatório",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -348,7 +348,7 @@
     "name": "Telefone",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -356,7 +356,7 @@
     "name": "Softwares e aplicativos",
     "type": "EXPENSE",
     "acceptEntry": true,
-   "parentAccountId": "2.2",
+    "parentAccountId": "2.2",
     "active": true
   },
   {
@@ -456,6 +456,14 @@
     "active": true
   },
   {
+    "id": "2.4.999",
+    "name": "Teste",
+    "type": "EXPENSE",
+    "acceptEntry": true,
+    "parentAccountId": "2.4",
+    "active": true
+  },
+  {
     "id": "3",
     "name": "Despesas bancárias",
     "type": "EXPENSE",
@@ -517,6 +525,46 @@
     "type": "INCOME",
     "acceptEntry": true,
     "parentAccountId": "4",
+    "active": true
+  },
+  {
+    "id": "9",
+    "name": "CONTA PAI TESTE",
+    "type": "INCOME",
+    "acceptEntry": false,
+    "parentAccountId": "",
+    "active": true
+  },
+  {
+    "id": "9.9.999.999",
+    "name": "CONTA PAI TESTE",
+    "type": "INCOME",
+    "acceptEntry": false,
+    "parentAccountId": "9.9.999",
+    "active": true
+  },
+  {
+    "id": "9.9.999.999.998",
+    "name": "CONTA FILHA TESTE",
+    "type": "INCOME",
+    "acceptEntry": true,
+    "parentAccountId": "9.9.999.999",
+    "active": true
+  },
+  {
+    "id": "9.9.999.999.999",
+    "name": "CONTA FILHA TESTE",
+    "type": "INCOME",
+    "acceptEntry": true,
+    "parentAccountId": "9.9.999.999",
+    "active": true
+  },
+  {
+    "id": "9.10",
+    "name": "CONTA TESTE",
+    "type": "INCOME",
+    "acceptEntry": true,
+    "parentAccountId": "9",
     "active": true
   }
 ]

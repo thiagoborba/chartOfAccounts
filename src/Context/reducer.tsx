@@ -9,6 +9,7 @@ import {
 import { addAccount, deleteAccount } from "./actionFunctions";
 
 import accounts from "../Mock/entries.json";
+import { sortAccounts } from "../Utils";
 
 export const initialState = {
   accounts,
@@ -46,6 +47,18 @@ export const GlobalContextProvider: React.FunctionComponent<InitialState> = ({
 export function GlobalContext() {
   const { state, dispatch } = useContext(Context);
 
+  const maxId = 999;
+
+  function getHighParentAccounts() {
+    return sortAccounts(state.accounts.filter((acc) => acc.id.length === 1));
+  }
+
+  function getNextHighestId() {
+    const lastAccountId = Number(getHighParentAccounts().pop()?.id);
+    const nextId = lastAccountId + 1;
+    return String(nextId);
+  }
+
   function getActiveAccounts() {
     return state.accounts.filter((acc) => acc.active === true);
   }
@@ -70,6 +83,65 @@ export function GlobalContext() {
     return state.accounts.find((acc) => acc.id === id);
   }
 
+  function getChildrensByParentId(parentId: string) {
+    return state.accounts.filter((acc) => acc.parentAccountId === parentId);
+  }
+
+  function getNewParentId(parentId: string) {
+    const arrayId = parentId.split(".");
+    const reverseArrayId = arrayId.reverse();
+
+    let newParentId = "";
+
+    for (let i = 0; i < reverseArrayId.length; i++) {
+      const numberId = Number(reverseArrayId[i]);
+      if (numberId < maxId) {
+        newParentId = reverseArrayId
+          .slice(i + 1)
+          .reverse()
+          .join(".");
+        break;
+      }
+    }
+
+    return newParentId;
+  }
+
+  function getIds(parentId: string): {
+    id: string;
+    parentAccountId: string;
+  } {
+    if (!parentId)
+      return {
+        parentAccountId: "",
+        id: getNextHighestId(),
+      };
+
+    const childrens = getChildrensByParentId(parentId);
+
+    if (childrens.length) {
+      let lastId = childrens[childrens.length - 1].id.split(".");
+
+      const lastIdNumber = Number(lastId.pop());
+
+      if (lastIdNumber < maxId) {
+        return {
+          parentAccountId: parentId,
+          id: `${parentId}.${lastIdNumber + 1}`,
+        };
+      }
+
+      const newParentId = getNewParentId(lastId.join("."));
+
+      return getIds(newParentId);
+    } else {
+      return {
+        parentAccountId: parentId,
+        id: `${parentId}.1`,
+      };
+    }
+  }
+
   return {
     dispatch,
     ActionTypes,
@@ -80,5 +152,6 @@ export function GlobalContext() {
     getAllAccounts,
     getAccount,
     state,
+    getIds,
   };
 }

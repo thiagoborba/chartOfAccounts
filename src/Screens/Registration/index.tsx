@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Screen } from "../../Components/Screen";
 import { Select } from "../../Components/Select";
 import { Input } from "../../Components/Input";
@@ -16,7 +16,6 @@ import {
 export const errorMessage = "Preencha esse campo para continuar";
 
 const validationSchema = Yup.object().shape({
-  id: Yup.string().required(errorMessage),
   name: Yup.string().required(errorMessage),
   type: Yup.string().required(errorMessage),
   acceptEntry: Yup.boolean().required(errorMessage),
@@ -34,14 +33,30 @@ const entriesData = [
 
 type Values = Account;
 
+function Validate(values: Values, validateFunction: (id: string) => boolean) {
+  let errors = {} as Values;
+  const { id } = values;
+  const isValid = validateFunction(id);
+
+  if (!isValid) {
+    errors.id = "Id já cadastrado";
+  }
+
+  return errors;
+}
+
 const initialValues = {} as Values;
 
 export function Registration({ navigation, route }: RegistrationScreenProps) {
+  const [updateParentValues, setUpdateParentValues] = useState(true);
+
   const {
     dispatch,
     getActiveParentsAccounts,
     getAllParentsAccounts,
     getAccount,
+    isValidAccountId,
+    getIds,
   } = GlobalContext();
 
   const { setFieldValue, errors, values, submitForm, setValues } =
@@ -49,13 +64,14 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
       initialValues,
       onSubmit,
       validationSchema,
+      validate: (values) => Validate(values, isValidAccountId),
       validateOnChange: false,
       validateOnBlur: true,
     });
 
-  const isPreviewMode = route?.params?.mode === ScreenMode.PREVIEW;
   const hasSelectedAccount = route?.params?.acc?.id;
-  const selectedAccount = route.params.acc!;
+  const selectedAccount = route?.params?.acc!;
+  const isPreviewMode = route?.params?.mode === ScreenMode.PREVIEW;
 
   const allParentAccounts = getAllParentsAccounts();
   const activeParentAccounts = getActiveParentsAccounts();
@@ -92,16 +108,18 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
     setHeader();
   }, []);
 
-  function setAccounTypeByParentAccountId() {
-    const parentAccount = getAccount(values.parentAccountId!)!;
-    if (!isPreviewMode && parentAccount) {
-      setFieldValue("type", parentAccount.type);
-    }
+  function setValuesFromParentAccount() {
+    const { id, parentAccountId } = getIds(values.parentAccountId!);
+    const parentType = getAccount(values.parentAccountId!)?.type;
+    setFieldValue("id", id);
+    setFieldValue("parentAccountId", parentAccountId);
+    setFieldValue("type", parentType);
+    setUpdateParentValues(false);
   }
 
   useEffect(() => {
-    setAccounTypeByParentAccountId();
-  }, [values.parentAccountId]);
+    if (updateParentValues) setValuesFromParentAccount();
+  }, [updateParentValues]);
 
   function onSubmit(values: Values) {
     dispatch({ type: ActionTypes.ADD_ACCOUNT, payload: values });
@@ -112,7 +130,10 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
     <Screen>
       <Select
         isDisabled={isPreviewMode}
-        onValueChange={(value) => setFieldValue("parentAccountId", value)}
+        onValueChange={(value) => {
+          setFieldValue("parentAccountId", value);
+          setUpdateParentValues(true);
+        }}
         data={parentAccountInputData}
         selectedValue={values.parentAccountId}
         placeholder="Selecione uma conta"
