@@ -150,6 +150,7 @@ export function GlobalContext() {
     getAllParentsAccounts,
     getActiveParentsAccounts,
     getAllAccounts,
+    getChildrensByParentId,
     getAccount,
     state,
     getIds,
