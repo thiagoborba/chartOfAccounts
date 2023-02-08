@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Center, HStack, Icon, Modal, Spacer, Text } from "native-base";
+import { Button, Center, HStack, Icon, Modal, Text } from "native-base";
 import { IModalProps } from "native-base/lib/typescript/components/composites/Modal/types";
 import { Feather } from "@expo/vector-icons";
 import { Account } from "../../Types";

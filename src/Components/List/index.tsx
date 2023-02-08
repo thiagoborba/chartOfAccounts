@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import {
   FlatList,
   HStack,
@@ -97,9 +97,6 @@ export const List = (props: ListProps) => {
       data={props.data}
       renderItem={ItemList}
       keyExtractor={(item) => item.id}
-      // removeClippedSubviews={true}
-      // maxToRenderPerBatch={20}
-      // initialNumToRender={20}
       {...props}
     />
   );

@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  ChevronDownIcon,
-  ChevronUpIcon,
   FormControl,
   Select as NativeSelect,
   WarningOutlineIcon,
