@@ -3,16 +3,15 @@ import {
   FlatList,
   HStack,
   Icon,
-  Text,
-  IconButton,
   Heading,
-  Box,
-  Pressable,
+  Text as NativeText,
 } from "native-base";
 
 import { Feather } from "@expo/vector-icons";
 import { AccountTypes } from "../../Types";
 import { IFlatListProps } from "native-base/lib/typescript/components/basic/FlatList";
+import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { theme } from "../../theme";
 
 type ItemProps = {
   id: string;
@@ -32,33 +31,35 @@ export const ItemList: React.FC<ItemProps> = ({
   type,
 }) => {
   const color =
-    type === AccountTypes.EXPENSE ? "UCondo.danger" : "UCondo.sucess";
+    type === AccountTypes.EXPENSE
+      ? theme.colors.UCondo.danger
+      : theme.colors.UCondo.sucess;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.white,
+      borderRadius: theme.radii["2xl"],
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: theme.space[5],
+    },
+    title: {
+      fontFamily: theme.fonts.UCondo.body,
+      color: color,
+    },
+  });
 
   return (
-    <Pressable onPress={onClickItem}>
-      {({ isPressed, isHovered, isFocused }) => (
-        <HStack
-          bg={isPressed ? "coolGray.200" : "white"}
-          key={id}
-          // backgroundColor={"white"}
-          borderRadius="2xl"
-          justifyContent="space-between"
-          alignItems="center"
-          paddingLeft={4}
-          paddingRight={1}
-          py={2}
-        >
-          <Text fontFamily="UCondo.body" color={color}>
-            {id} - {label}
-          </Text>
-          <IconButton
-            rounded="full"
-            onPress={onClickDelete}
-            icon={<Icon as={Feather} color="UCondo.grey" name="trash" />}
-          />
-        </HStack>
-      )}
-    </Pressable>
+    <TouchableOpacity style={styles.container} onPress={onClickItem}>
+      <Text style={styles.title}>
+        {id} - {label}
+      </Text>
+      <TouchableOpacity onPress={onClickDelete}>
+        <Icon as={Feather} color="UCondo.grey" name="trash" />
+      </TouchableOpacity>
+    </TouchableOpacity>
   );
 };
 
@@ -72,7 +73,9 @@ export const List = (props: ListProps) => {
         alignItems="center"
       >
         <Heading color="UCondo.grey3">Listagem</Heading>
-        <Text color={"UCondo.grey2"}>{props.data?.length || 0} Registros</Text>
+        <NativeText color={"UCondo.grey2"}>
+          {props.data?.length || 0} Registros
+        </NativeText>
       </HStack>
     );
   }
@@ -85,6 +88,9 @@ export const List = (props: ListProps) => {
       data={props.data}
       renderItem={({ item }) => <ItemList {...item} />}
       keyExtractor={(item) => item.id}
+      removeClippedSubviews={true}
+      maxToRenderPerBatch={20}
+      initialNumToRender={20}
       {...props}
     />
   );

@@ -116,7 +116,7 @@ export function Registration({ navigation, route }: RegistrationScreenProps) {
   }
 
   useEffect(() => {
-    if (updateParentValues) setValuesFromParentAccount();
+    if (updateParentValues && !isPreviewMode) setValuesFromParentAccount();
   }, [updateParentValues]);
 
   function onSubmit(values: Values) {
